@@ -210,11 +210,17 @@ You Need 32 ETH Goerli
 
 Create Validator Key With Wagyu Keygen
 
-Download Here [Wagyu Key Gen](https://github.com/stake-house/wagyu-key-gen)
+Download Here [Wagyu Key Gen](https://github.com/stake-house/wagyu-key-gen/releases)
 
 If you choose the *Wagyu Key Gen* application, make sure to select the *Prater* network and follow the instructions provided.
 
+![image](https://user-images.githubusercontent.com/46390405/200476058-2a254f2f-53bf-4185-b6dd-6d5fb0b77d19.png)
+
+
 Make sure to store your keystore password and your mnemonic somewhere safe. You should end up with a deposit file (starts with `deposit_data-` and ends with `.json`) and one or more keystore files (starts with `keystore-` and ends with `.json`), 1 per validator. Copy them around if needed. Make sure your deposit file and your keystore files are in a known and accessible location on your machine.
+
+![image](https://user-images.githubusercontent.com/46390405/200504087-25288f49-c015-434d-8cf2-0be85c3f56ec.png)
+
 
 Next we will do the deposit using the Prater launchpad. Make sure you have access to a browser with MetaMask, your account with the funds from the faucet and the deposit file we just created.
 
@@ -222,31 +228,35 @@ Go to [the Prater launchpad](https://prater.launchpad.ethereum.org/en/). Follow 
 
 You can check that your deposit transaction went through on [the transaction explorer](https://goerli.etherscan.io/address/0xff50ed3d0ec03aC01D4C79aAd74928BFF48a7b2b).
 
+### Put your 2 Json Deposit and Keystore files in the Vps Terminal
+![image](https://user-images.githubusercontent.com/46390405/200514743-1bce2bca-af05-4b19-9d6e-408992a64527.png)
+
+
 ### Configuring your Lighthouse validator client
 
 Create a dedicated user for running the Lighthouse validator client, create a directory for holding the data and assign the proper permissions.
 
-```console
-$ sudo useradd --no-create-home --shell /bin/false lighthousevalidator
-$ sudo mkdir -p /var/lib/lighthouse/validators
-$ sudo chown -R lighthousevalidator:lighthousevalidator /var/lib/lighthouse/validators
-$ sudo chmod 700 /var/lib/lighthouse/validators
+```
+sudo useradd --no-create-home --shell /bin/false lighthousevalidator
+sudo mkdir -p /var/lib/lighthouse/validators
+sudo chown -R lighthousevalidator:lighthousevalidator /var/lib/lighthouse/validators
+sudo chmod 700 /var/lib/lighthouse/validators
 ```
 
 Import your keystore that includes your validator key for the Lighthouse validator client. Running the first command will prompt you for that keystore password. Make sure to enter it correctly and avoid leaving it blank. Make sure to replace `/path/to/keystores` with the actual path to your keystores created [in the previous step](#creating-your-validator-keys-and-performing-the-deposit).
 
-```console
-$ sudo /usr/local/bin/lighthouse account validator import \
-    --directory /path/to/keystores \
+```
+sudo /usr/local/bin/lighthouse account validator import \
+    --directory /root/keystores \
     --datadir /var/lib/lighthouse \
     --network prater
-$ sudo chown -R lighthousevalidator:lighthousevalidator /var/lib/lighthouse/validators
+sudo chown -R lighthousevalidator:lighthousevalidator /var/lib/lighthouse/validators
 ```
 
 Create a systemd service config file to configure the Lighthouse validator client service.
 
-```console
-$ sudo nano /etc/systemd/system/lighthousevalidator.service
+```
+sudo nano /etc/systemd/system/lighthousevalidator.service
 ```
 
 Paste the following service configuration into the file. Exit and save once done (`Ctrl` + `X`, `Y`, `Enter`). Make sure to replace the `0x0000000000000000000000000000000000000000` address with your own Ethereum address that you control where you want to receive the transaction tips.
@@ -276,24 +286,24 @@ WantedBy=multi-user.target
 
 Reload systemd to reflect the changes and start the service. Check status to make sure it’s running correctly.
 
-```console
-$ sudo systemctl daemon-reload
-$ sudo systemctl start lighthousevalidator.service
-$ sudo systemctl status lighthousevalidator.service
+```
+sudo systemctl daemon-reload
+sudo systemctl start lighthousevalidator.service
+sudo systemctl status lighthousevalidator.service
 ```
 
 It should say active (running) in green text. If not then go back and repeat the steps to fix the problem. Press Q to quit (will not affect the Lighthouse validator client service).
 
 Enable the Lighthouse validator client service to automatically start on reboot.
 
-```console
-$ sudo systemctl enable lighthousevalidator.service
+```
+sudo systemctl enable lighthousevalidator.service
 ```
 
 You can watch the live messages from your Lighthouse validator client logs using this command.
 
-```console
-$ sudo journalctl -f -u lighthousevalidator.service -o cat | ccze -A
+```
+sudo journalctl -f -u lighthousevalidator.service -o cat | ccze -A
 ```
 
 Press `Ctrl` + `C` to stop showing those messages.
