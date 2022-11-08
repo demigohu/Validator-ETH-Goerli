@@ -229,6 +229,10 @@ Go to [the Prater launchpad](https://prater.launchpad.ethereum.org/en/). Follow 
 You can check that your deposit transaction went through on [the transaction explorer](https://goerli.etherscan.io/address/0xff50ed3d0ec03aC01D4C79aAd74928BFF48a7b2b).
 
 ### Put your 2 Json Deposit and Keystore files in the Vps Terminal
+Create Directory Keystores
+```
+mkdir keystores
+```
 ![image](https://user-images.githubusercontent.com/46390405/200514743-1bce2bca-af05-4b19-9d6e-408992a64527.png)
 
 
@@ -243,7 +247,7 @@ sudo chown -R lighthousevalidator:lighthousevalidator /var/lib/lighthouse/valida
 sudo chmod 700 /var/lib/lighthouse/validators
 ```
 
-Import your keystore that includes your validator key for the Lighthouse validator client. Running the first command will prompt you for that keystore password. Make sure to enter it correctly and avoid leaving it blank. Make sure to replace `/path/to/keystores` with the actual path to your keystores created [in the previous step](#creating-your-validator-keys-and-performing-the-deposit).
+Import your keystore that includes your validator key for the Lighthouse validator client. Running the first command will prompt you for that keystore password. Make sure to enter it correctly and avoid leaving it blank.
 
 ```
 sudo /usr/local/bin/lighthouse account validator import \
@@ -308,18 +312,7 @@ sudo journalctl -f -u lighthousevalidator.service -o cat | ccze -A
 
 Press `Ctrl` + `C` to stop showing those messages.
 
-## What's next?
-
-You performs a lot of different tasks to help with the [*#TestingTheMerge*](https://twitter.com/search?q=%23TestingTheMerge) initiave. Check out [the program structure](https://hackmd.io/WKpg6SNzQbi1jVKNgrSgWg). There are different tasks for all technical abilities.
-
-## Support
-
-If you have any question or if you need additional support, make sure to get in touch with people involved with this initiative:
-
-* EthStaker Discord: [discord.io/ethstaker](https://discord.io/ethstaker) in the #ropsten channel
-* Eth R&D Discord: [discord.gg/qGpsxSA](https://discord.gg/qGpsxSA) in the #testing channel under the *Merge* category.
-
 ## Credits
 
-Based on [Somer Esat's guide](https://github.com/SomerEsat/ethereum-staking-guide).
+Based on [ETH Staker guide](https://github.com/eth-educators/ethstaker-guides/blob/main/merge-goerli-prater.md).
 Based on [Ethereum community's guide](https://notes.ethereum.org/qrDBhhydTsyKFmGaBl2COQ).
